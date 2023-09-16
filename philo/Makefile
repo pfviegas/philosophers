@@ -6,7 +6,7 @@
 #    By: paulo <paulo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/09/13 15:50:22 by paulo            ###   ########.fr        #
+#    Updated: 2023/09/16 15:48:08 by paulo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,14 +17,14 @@ SRC_DIR = src
 OBJ_DIR = objs
 
 SRC =	$(SRC_DIR)/main.c \
-		$(SRC_DIR)/checks.c \
+		$(SRC_DIR)/init.c \
 		$(SRC_DIR)/exit.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 CC = clang
 HEAD = -I./includes
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
 LFLAGS = -pthread
 RM = /bin/rm -rf
 
@@ -49,6 +49,11 @@ fclean: clean
 re: fclean all
 
 norm:
-	norminette | grep -v "OK" || true
+	@norminette | grep -v "OK" || true
+
+install:
+	python3 -m pip install --upgrade pip setuptools
+	python3 -m pip install norminette
+	sudo apt install valgrind -y
 
 .PONY: all clean fclean re

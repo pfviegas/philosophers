@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/13 16:53:42 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/16 15:35:26 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,11 @@ int		ft_atoi(const char *str);
 // Função para verificar se um caractere é um dígito decimal.
 int		ft_isdigit(int c);
 
+// Função para inicializar as variaveis da simulação
+void init_var_sim(t_Simulation *simulation, int argc, char *argv[]);
+
+// Função para inicializar os filósofos
+void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher);
 /*
 // Função para imprimir mensagens
 void	print_message(t_Philosopher *philo, char *message);

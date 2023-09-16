@@ -72,41 +72,6 @@ void think(Philosopher *philo) {
     print_message(philo, "is thinking");
 }
 
-// Função que define o ciclo de vida de um filósofo
-void *philosopher_life(void *arg) {
-    Philosopher *philo = (Philosopher *)arg;
 
-    while (philo->meals_left != 0) {
-        think(philo);
-        eat(philo);
-        sleep(philo);
-    }
-
-    return NULL;
-}
-
-// Função para criar e iniciar a simulação
-void run_simulation(Simulation *sim, Philosopher *philosophers) {
-    pthread_mutex_init(&sim->print_lock, NULL);
-
-    // Inicialização dos garfos
-    for (int i = 0; i < sim->num_philosophers; i++) {
-        pthread_mutex_init(&sim->forks[i], NULL);
-    }
-
-    gettimeofday(&sim->start_time, NULL);
-
-    // Criação das threads para os filósofos
-    for (int i = 0; i < sim->num_philosophers; i++) {
-        pthread_create(&philosophers[i].thread, NULL, philosopher_life, &philosophers[i]);
-    }
-
-    // Aguarda o término das threads
-    for (int i = 0; i < sim->num_philosophers; i++) {
-        pthread_join(philosophers[i].thread, NULL);
-    }
-}
-
-```
 
 Esta versão do código é mais legível e modular, tornando mais fácil entender as ações de cada filósofo e a lógica da simulação. Além disso, foram adicionados comentários explicativos para ajudar na compreensão do código.
