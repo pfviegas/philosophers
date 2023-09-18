@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:51:44 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 21:14:47 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 12:11:40 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ void think_philo(t_Philosopher *philo)
 // Função para realizar a ação de comer
 void	eat_philo(t_Philosopher *philo) 
 {
+	int	left_fork;
+	int	right_fork;
+
 	if (should_die(philo))
 	{
 		philo->state = DEAD;
@@ -52,22 +55,48 @@ void	eat_philo(t_Philosopher *philo)
 
 	philo->meals_left--;
 
-	pthread_mutex_lock(&philo->sim->forks[philo->id]);
-	print_message(philo, "has taken a fork");
+	left_fork = philo->id;
+	right_fork = (philo->id + 1) % philo->sim->num_philosophers;
 
-	pthread_mutex_lock(&philo->sim->forks[(philo->id + 1) % philo->sim->num_philosophers]);
-	print_message(philo, "has taken a fork");
+	// Lock no garfo à esquerda
+	pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
+    if (!philo->sim->forks[left_fork].is_available)
+	{
+		// Se o garfo à esquerda não estiver disponível, liberamos o garfo e saímos
+		pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
+		philo->state = THINKING;
+		return;
+	}
+	print_message(philo, "has taken left fork");
+
+	// Lock no garfo à direita
+	pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
+	if (!philo->sim->forks[right_fork].is_available) 
+	{
+		// Se o garfo à direita não estiver disponível, liberamos ambos os garfos e saímos
+		pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
+		philo->state = THINKING;
+		return;
+	}
+	print_message(philo, "has taken right fork");
+
+	// Marcamos os garfos como não disponíveis
+	philo->sim->forks[left_fork].is_available = 0;
+	philo->sim->forks[right_fork].is_available = 0;
 
 	philo->last_meal_time = total_time(philo->sim);
 	philo->state = EATING;
 	print_message(philo, "is eating");
-
 	usleep(philo->sim->time_to_eat * 1000);
 
-	pthread_mutex_unlock(&philo->sim->forks[philo->id]);
-	pthread_mutex_unlock(&philo->sim->forks[(philo->id + 1) % philo->sim->num_philosophers]);
+	// Liberamos os garfos
+	philo->sim->forks[left_fork].is_available = 1;
+	philo->sim->forks[right_fork].is_available = 1;
 
-	philo->state = THINKING;
+	pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
+	pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
+
+	philo->state = SLEEPING;
 }
 
 // Função que define o ciclo de vida de um filósofo
@@ -79,8 +108,8 @@ void *philosopher_life(void *arg)
 	while (philo->meals_left != 0) 
 	{
 		eat_philo(philo);
-		think_philo(philo);
 		sleep_philo(philo);
+		think_philo(philo);
 	}
 	return (NULL);
 }

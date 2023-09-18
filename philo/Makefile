@@ -6,7 +6,7 @@
 #    By: paulo <paulo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/09/16 21:45:20 by paulo            ###   ########.fr        #
+#    Updated: 2023/09/18 12:19:50 by paulo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 CC = clang
 HEAD = -I./includes
-CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 LFLAGS = -pthread
 RM = /bin/rm -rf
 

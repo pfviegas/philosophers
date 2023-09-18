@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 21:36:39 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 11:59:45 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,18 @@ enum e_PhilosopherState {
 	DEAD
 };
 
+// Estrutura de dados para um garfo
+typedef struct s_Fork
+{
+	pthread_mutex_t	lock;
+	int				is_available;
+}	t_Fork;
+
 // Estrutura de dados para a simulação
 typedef struct s_Simulation
 {
 	struct timeval	start_time;
-	pthread_mutex_t	*forks;
+	t_Fork			*forks;
 	pthread_mutex_t	print_lock;
 	int				num_philosophers;
 	int				time_to_die;

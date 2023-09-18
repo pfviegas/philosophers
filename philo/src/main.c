@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 21:42:46 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 12:21:17 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,17 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 {
 	int i;
 	
-	sim->forks = malloc(sizeof(t_Philosopher) * (sim->num_philosophers));
+	sim->forks = malloc(sizeof(t_Philosopher) * (sim->num_philosophers + 1));
 	pthread_mutex_init(&sim->print_lock, NULL);
 	// Inicialização dos garfos
 	i = 0;
 	while(i < sim->num_philosophers)
-		pthread_mutex_init(&sim->forks[i++], NULL);
+	{	
+		pthread_mutex_init(&sim->forks[i].lock, NULL);
+		sim->forks[i].is_available = 1;
+		i++;
+//		pthread_mutex_init(&sim->forks[i++], NULL);
+	}
 
 	// Criação das threads para os filósofos
 	i = 0;

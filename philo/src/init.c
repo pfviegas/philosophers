@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 21:01:05 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 12:14:39 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 
 /**
  * @brief Converts a string to an integer.
- *
+ * 
  * @param str The string to be converted.
- *
  * @return The integer representation of the string.
  */
 int	ft_atoi(const char *str)
@@ -59,7 +58,7 @@ int	ft_isdigit(int c)
 }
 
 /**
- * Initializes the simulation variables with the values passed as arguments.
+ * @brief Initializes the simulation variables with the values passed as arguments.
  * 
  * @param simulation Pointer to the Simulation struct to be initialized.
  * @param argc Number of arguments passed to the program.
@@ -79,7 +78,8 @@ void init_var_sim(t_Simulation *simulation, int argc, char *argv[])
 }
 
 /**
- * Initializes the philosophers in the simulation with their respective attributes.
+ * @brief Initializes the philosophers in the simulation with their respective attributes.
+ * 
  * @param simulation The simulation struct containing the number of philosophers and other parameters.
  * @param philosopher The philosopher struct containing the philosopher's id, meals_left, state, last_meal_time and sim.
  */
