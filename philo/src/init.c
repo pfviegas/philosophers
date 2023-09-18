@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 15:34:41 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/16 21:01:05 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,11 @@
 #include "../includes/philosophers.h"
 
 /**
- * @brief Converte uma string para um valor inteiro.
+ * @brief Converts a string to an integer.
  *
- * A função `ft_atoi` converte a string `str` em um valor inteiro.
+ * @param str The string to be converted.
  *
- * @param str A string a ser convertida.
- * @return O valor inteiro convertido.
+ * @return The integer representation of the string.
  */
 int	ft_atoi(const char *str)
 {
@@ -49,12 +48,10 @@ int	ft_atoi(const char *str)
 }
 
 /**
- * @brief Verifica se um caractere é um dígito decimal.
- *
- * A função `ft_isdigit` verifica se o caractere `c` é um dígito decimal (0-9).
- *
- * @param c O caractere a ser verificado.
- * @return 1 se o caractere for um dígito decimal, 0 caso contrário.
+ * @brief Checks if a character is a digit.
+ * 
+ * @param c The character to be checked.
+ * @return int Returns 1 if the character is a digit, 0 otherwise.
  */
 int	ft_isdigit(int c)
 {
@@ -75,9 +72,10 @@ void init_var_sim(t_Simulation *simulation, int argc, char *argv[])
 	simulation->time_to_eat = ft_atoi(argv[3]);
 	simulation->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		simulation->eat_count = atoi(argv[5]);
+		simulation->eat_count = ft_atoi(argv[5]);
 	else
 		simulation->eat_count = -1;
+	gettimeofday(&simulation->start_time, NULL);
 }
 
 /**
