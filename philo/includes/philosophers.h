@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/18 11:59:45 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 16:49:30 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@
 # include <pthread.h>
 # include <unistd.h>
 # include <sys/time.h>
-
-// Definições de constantes
-# define MAX_PHILOSOPHERS 200
 
 // Enumeração para estados dos filósofos
 enum e_PhilosopherState {
@@ -49,8 +46,8 @@ typedef struct s_Simulation
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				eat_count;
-	pthread_t		checker;
+	int				total_meals;
+	int				simulation_running;
 }	t_Simulation;
 
 // Estrutura de dados para um filósofo
@@ -64,9 +61,6 @@ typedef struct s_Philosopher
 	pthread_t				thread;
 }	t_Philosopher;
 
-// Função para imprimir a mensagem de erro e sair
-void	quit(char *s, int exit_code);
-
 // Função para converter char em int
 int		ft_atoi(const char *str);
 
@@ -74,25 +68,25 @@ int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 
 // Função para inicializar as variaveis da simulação
-void init_var_sim(t_Simulation *simulation, int argc, char *argv[]);
+void	init_var_sim(t_Simulation *simulation, int argc, char *argv[]);
 
 // Função para inicializar os filósofos
-void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher);
+void	create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher);
 
 // Função para criar e iniciar a simulação
 void	run_simulation(t_Simulation *sim, t_Philosopher *philosophers);
 
 // Função que define o ciclo de vida de um filósofo
-void *philosopher_life(void *arg);
+void	*philosopher_life(void *arg);
 
 // Função para realizar a ação de comer
 void	eat_philo(t_Philosopher *philo);
 
 // Função para verificar se um filósofo deve morrer
-int should_die(t_Philosopher *philo);
+int		should_die(t_Philosopher *philo);
 
 // Função para imprimir mensagens
-void	print_message(t_Philosopher *philo, char *message);
+void	print_msg(t_Philosopher *philo, char *message);
 
 // Função para calcular o tempo total decorrido
 long	total_time(t_Simulation *sim);

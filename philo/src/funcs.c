@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:06:36 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/16 20:39:51 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 16:06:29 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @param philo Pointer to the philosopher struct.
  * @param message The message to be printed.
  */
-void	print_message(t_Philosopher *philo, char *message)
+void	print_msg(t_Philosopher *philo, char *message)
 {
 	pthread_mutex_lock(&philo->sim->print_lock);
 	printf("%ld %d %s\n", total_time(philo->sim), philo->id, message);
@@ -37,10 +37,12 @@ void	print_message(t_Philosopher *philo, char *message)
 long	total_time(t_Simulation *sim)
 {
 	struct timeval current_time;
+	long time;
 	
 	gettimeofday(&current_time, NULL);
-	return ((current_time.tv_sec - sim->start_time.tv_sec) * 1000 +
+	time = ((current_time.tv_sec - sim->start_time.tv_sec) * 1000 +
 			(current_time.tv_usec - sim->start_time.tv_usec) / 1000);
+	return (time);
 }
 
 /**
@@ -50,5 +52,8 @@ long	total_time(t_Simulation *sim)
  */
 int should_die(t_Philosopher *philo)
 {
-	return (total_time(philo->sim) - philo->last_meal_time) > philo->sim->time_to_die;
+	if ((total_time(philo->sim) - philo->last_meal_time) > philo->sim->time_to_die)
+		return (1);
+	else
+		return (0);
 }

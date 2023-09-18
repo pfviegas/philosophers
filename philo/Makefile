@@ -6,7 +6,7 @@
 #    By: paulo <paulo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/09/18 12:19:50 by paulo            ###   ########.fr        #
+#    Updated: 2023/09/18 14:38:53 by paulo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,7 @@ OBJ_DIR = objs
 SRC =	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/init.c \
 		$(SRC_DIR)/actions.c \
-		$(SRC_DIR)/funcs.c \
-		$(SRC_DIR)/exit.c
+		$(SRC_DIR)/funcs.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 

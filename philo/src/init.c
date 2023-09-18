@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/18 12:14:39 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/18 16:49:30 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,16 @@ int	ft_isdigit(int c)
  */
 void init_var_sim(t_Simulation *simulation, int argc, char *argv[]) 
 {
+	gettimeofday(&simulation->start_time, NULL);
 	simulation->num_philosophers = ft_atoi(argv[1]);
 	simulation->time_to_die = ft_atoi(argv[2]);
 	simulation->time_to_eat = ft_atoi(argv[3]);
 	simulation->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		simulation->eat_count = ft_atoi(argv[5]);
+		simulation->total_meals = ft_atoi(argv[5]);
 	else
-		simulation->eat_count = -1;
-	gettimeofday(&simulation->start_time, NULL);
+		simulation->total_meals = -1;
+	simulation->simulation_running = 1;
 }
 
 /**
@@ -91,7 +92,7 @@ void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher)
 	while (i < simulation->num_philosophers)
 	{
 		philosopher[i].id = i + 1;
-		philosopher[i].meals_left = simulation->eat_count;
+		philosopher[i].meals_left = simulation->total_meals;
 		philosopher[i].state = THINKING;
 		philosopher[i].last_meal_time = 0;
 		philosopher[i].sim = simulation;
