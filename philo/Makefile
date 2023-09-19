@@ -3,15 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: paulo <paulo@student.42.fr>                +#+  +:+       +#+         #
+#    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/09/18 14:38:53 by paulo            ###   ########.fr        #
+#    Updated: 2023/09/19 15:20:39 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # atualizar cabeçalho
-
 NAME = philo
 SRC_DIR = src
 OBJ_DIR = objs
@@ -25,12 +24,12 @@ OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 CC = clang
 HEAD = -I./includes
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
 LFLAGS = -pthread
 RM = /bin/rm -rf
 
 all: $(NAME)
-
+		
 $(NAME): $(OBJ)
 		@$(CC) $(OBJ) $(HEAD) $(CFLAGS) $(LFLAGS) -o $(NAME)
 
@@ -47,9 +46,10 @@ fclean: clean
 		@$(RM) $(NAME)
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving philo\033[0m"
 
-re: fclean all
-
+re: fclean alls
+		
 norm:
+	@clear
 	@norminette | grep -v "OK" || true
 
 install:

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/18 16:49:30 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/19 13:03:38 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	ft_isdigit(int c)
  */
 void init_var_sim(t_Simulation *simulation, int argc, char *argv[]) 
 {
-	gettimeofday(&simulation->start_time, NULL);
 	simulation->num_philosophers = ft_atoi(argv[1]);
 	simulation->time_to_die = ft_atoi(argv[2]);
 	simulation->time_to_eat = ft_atoi(argv[3]);

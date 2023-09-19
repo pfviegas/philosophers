@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/18 16:26:20 by paulo            ###   ########.fr       */
+/*   Updated: 2023/09/19 13:22:18 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	
 	pthread_mutex_init(&sim->print_lock, NULL);
 	// Inicialização dos garfos
-	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers + 1));
+	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
 	i = 0;
 	while(i < sim->num_philosophers)
 	{	
@@ -39,6 +39,7 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 
 	// Criação das threads para os filósofos
 	i = 0;
+	gettimeofday(&sim->start_time, NULL);
 	while(i < sim->num_philosophers)
 	{
 		pthread_create(&philosopher[i].thread, NULL, philosopher_life, &philosopher[i]);
