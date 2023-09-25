@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/19 13:03:38 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/09/25 14:23:49 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher)
 		philosopher[i].id = i + 1;
 		philosopher[i].meals_left = simulation->total_meals;
 		philosopher[i].state = THINKING;
-		philosopher[i].last_meal_time = 0;
+		philosopher[i].last_meal_time = get_time_ms();
 		philosopher[i].sim = simulation;
 		i++;
 	}

@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/09/19 15:20:39 by pviegas          ###   ########.fr        #
+#    Updated: 2023/09/25 14:29:44 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ SRC_DIR = src
 OBJ_DIR = objs
 
 SRC =	$(SRC_DIR)/main.c \
+		$(SRC_DIR)/checks.c \
 		$(SRC_DIR)/init.c \
 		$(SRC_DIR)/actions.c \
 		$(SRC_DIR)/funcs.c
@@ -46,7 +47,7 @@ fclean: clean
 		@$(RM) $(NAME)
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving philo\033[0m"
 
-re: fclean alls
+re: fclean all
 		
 norm:
 	@clear

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/19 11:22:13 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/09/25 16:08:42 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ typedef struct s_Fork
 // Estrutura de dados para a simulação
 typedef struct s_Simulation
 {
-	struct timeval	start_time;
+	long int		start_time;
 	t_Fork			*forks;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	simulation_lock;
 	int				num_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
@@ -60,6 +61,10 @@ typedef struct s_Philosopher
 	t_Simulation			*sim;
 	pthread_t				thread;
 }	t_Philosopher;
+
+int		check_argc(int argc);
+
+int		check_argv(char *argv[]);
 
 // Função para converter char em int
 int		ft_atoi(const char *str);
@@ -83,18 +88,22 @@ void	*philosopher_life(void *arg);
 void	eat_philo(t_Philosopher *philo);
 
 // Função para verificar se um filósofo deve morrer
-int		should_die(t_Philosopher *philo);
+int			died(t_Philosopher *philo);
+
+// Função para verificar se um filósofo vai morrer durante o sono
+int	will_die(t_Philosopher *philo);
 
 // Função para imprimir mensagens
-void	print_msg(t_Philosopher *philo, char *message);
+void		print_msg(t_Philosopher *philo, char *message);
 
 // Função para calcular o tempo total decorrido
-long	total_time(t_Simulation *sim);
+long int	get_time_ms(void);
 
 // Função para realizar a ação de pensar
-void	think_philo(t_Philosopher *philo);
+void		think_philo(t_Philosopher *philo);
 
 // Função para realizar a ação de dormir
-void	sleep_philo(t_Philosopher *philo);
+void		sleep_philo(t_Philosopher *philo);
 
+void	precise_sleep(long int miliseconds);
 #endif

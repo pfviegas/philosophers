@@ -5,12 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/16 20:06:36 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/19 15:36:12 by pviegas          ###   ########.fr       */
+/*   Created: 2023/09/20 13:05:29 by pviegas           #+#    #+#             */
+/*   Updated: 2023/09/25 16:22:07 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// atualizar cabeçalho
 
 #include "../includes/philosophers.h"
 
@@ -26,26 +24,17 @@ void	print_msg(t_Philosopher *philo, char *message)
 	pthread_mutex_lock(&philo->sim->print_lock);
 	if (philo->sim->simulation_running == 1 || philo->state == DEAD)
 	{
-		printf("%ld %d %s\n", total_time(philo->sim), philo->id, message);
+		printf("%ld %d %s\n", (get_time_ms() - philo->sim->start_time), philo->id, message);
 	}
 	pthread_mutex_unlock(&philo->sim->print_lock);
 }
 
-/**
- * Calculates the total time elapsed since the start of the simulation.
- * 
- * @param sim Pointer to the simulation struct.
- * @return The total time elapsed in milliseconds.
- */
-long	total_time(t_Simulation *sim)
+long int	get_time_ms(void)
 {
 	struct timeval	current_time;
-	long			time;
 
 	gettimeofday(&current_time, NULL);
-	time = ((current_time.tv_sec - sim->start_time.tv_sec) * 1000 
-			+ (current_time.tv_usec - sim->start_time.tv_usec) / 1000);
-	return (time);
+	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
 /**
@@ -55,18 +44,62 @@ long	total_time(t_Simulation *sim)
  * @param philo The philosopher to check.
  * @return 1 if the philosopher should die, 0 otherwise.
  */
-int	should_die(t_Philosopher *philo)
+int	died(t_Philosopher *philo)
 {
-	if ((total_time(philo->sim) - philo->last_meal_time)
+	if ((get_time_ms() - philo->last_meal_time)
 		>= philo->sim->time_to_die)
 	{
-		pthread_mutex_lock(&philo->sim->print_lock);
+		pthread_mutex_lock(&philo->sim->simulation_lock);
+		if (philo->sim->simulation_running == 1)
+		{
+			print_msg(philo, "died");
+		}
 		philo->sim->simulation_running = 0;
 		philo->state = DEAD;
-		pthread_mutex_unlock(&philo->sim->print_lock);
-		print_msg(philo, "died");
+		pthread_mutex_unlock(&philo->sim->simulation_lock);
 		return (1);
 	}
 	else
 		return (0);
+}
+
+int	will_die(t_Philosopher *philo)
+{
+	if ((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep)
+		>= philo->sim->time_to_die)
+	{
+		pthread_mutex_lock(&philo->sim->simulation_lock);
+		if (philo->sim->simulation_running == 1)
+		{
+			if ((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep)
+				>= philo->sim->time_to_die)
+			{
+				print_msg(philo, "is sleeping");
+				usleep((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep - philo->sim->time_to_die) * 1000);
+				print_msg(philo, "died");
+			}
+		}
+		philo->sim->simulation_running = 0;
+		philo->state = DEAD;
+		pthread_mutex_unlock(&philo->sim->simulation_lock);
+		return (1);
+	}
+	else
+		return (0);
+}
+
+void	precise_sleep(long int miliseconds)
+{
+	long int	start_time;
+
+	start_time = get_time_ms();
+	if (miliseconds < 100)
+		usleep(miliseconds * 1000);
+	else
+	{
+		while ((get_time_ms() - (start_time) < miliseconds))
+		{
+			usleep(10);
+		}
+	}
 }

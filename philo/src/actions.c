@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:51:44 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/19 16:03:40 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/09/25 16:23:06 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  */
 void	think_philo(t_Philosopher *philo)
 {
-	if (!should_die(philo))
+	if (!died(philo))
 	{
 		philo->state = THINKING;
 		print_msg(philo, "is thinking");
@@ -45,11 +45,11 @@ void	think_philo(t_Philosopher *philo)
  */
 void	sleep_philo(t_Philosopher *philo)
 {
-	if (!should_die(philo))
+	if (!will_die(philo))
 	{
 		philo->state = SLEEPING;
 		print_msg(philo, "is sleeping");
-		usleep(philo->sim->time_to_sleep * 1000);
+		precise_sleep((philo->sim->time_to_sleep));
 	}
 }
 
@@ -75,7 +75,7 @@ void	eat_philo(t_Philosopher *philo)
 	int	left_fork;
 	int	right_fork;
 
-	if (!should_die(philo))
+	if (!died(philo))
 	{
 		left_fork = philo->id - 1;
 		right_fork = (philo->id) % philo->sim->num_philosophers;
@@ -86,16 +86,18 @@ void	eat_philo(t_Philosopher *philo)
 			{
 				pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 				philo->state = THINKING;
+				print_msg(philo, "is thinking");
 				return ;
 			}
-			print_msg(philo, "has taken a fork");
 			pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
 			if (!philo->sim->forks[right_fork].is_available) 
 			{
 				pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 				philo->state = THINKING;
+				print_msg(philo, "is thinking");
 				return ;
 			}
+			print_msg(philo, "has taken a fork");
 			print_msg(philo, "has taken a fork");
 		}
 		else
@@ -105,24 +107,26 @@ void	eat_philo(t_Philosopher *philo)
 			{
 				pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 				philo->state = THINKING;
+				print_msg(philo, "is thinking");
 				return ;
 			}
-			print_msg(philo, "has taken a fork");
 			pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
 			if (!philo->sim->forks[left_fork].is_available)
 			{
 				pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 				philo->state = THINKING;
+				print_msg(philo, "is thinking");
 				return ;
 			}
+			print_msg(philo, "has taken a fork");
 			print_msg(philo, "has taken a fork");
 		}
 		philo->sim->forks[left_fork].is_available = 0;
 		philo->sim->forks[right_fork].is_available = 0;
-		philo->last_meal_time = total_time(philo->sim);
+		philo->last_meal_time = get_time_ms();
 		philo->state = EATING;
 		print_msg(philo, "is eating");
-		usleep(philo->sim->time_to_eat * 1000);
+		precise_sleep((philo->sim->time_to_eat));
 		philo->meals_left--;
 		philo->sim->forks[left_fork].is_available = 1;
 		philo->sim->forks[right_fork].is_available = 1;
@@ -143,33 +147,17 @@ void *philosopher_life(void *arg)
 	t_Philosopher *philo;
 
 	philo = (t_Philosopher *)arg;
-	while (philo->meals_left != 0)
+	if (philo->sim->num_philosophers == 1)
 	{
-		pthread_mutex_lock(&philo->sim->print_lock);
-		if (philo->sim->simulation_running == 0)
-		{
-			pthread_mutex_unlock(&philo->sim->print_lock);
-			break;
-		}
-		pthread_mutex_unlock(&philo->sim->print_lock);
-		
-		eat_philo(philo);
-		pthread_mutex_lock(&philo->sim->print_lock);
-		if (philo->sim->simulation_running == 0)
-		{
-			pthread_mutex_unlock(&philo->sim->print_lock);
-			break;
-		}
-		pthread_mutex_unlock(&philo->sim->print_lock);
+		usleep(philo->sim->time_to_die * 1000);
+		print_msg(philo, "died");
+		return ((void *)0);
+	}
 
+	while (philo->meals_left != 0 && philo->sim->simulation_running == 1)
+	{
+		eat_philo(philo);
 		sleep_philo(philo);
-		pthread_mutex_lock(&philo->sim->print_lock);
-		if (philo->sim->simulation_running == 0)
-		{
-			pthread_mutex_unlock(&philo->sim->print_lock);
-			break;
-		}
-		pthread_mutex_unlock(&philo->sim->print_lock);
 		think_philo(philo);
 	}
 	return (NULL);
