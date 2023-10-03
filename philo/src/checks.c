@@ -6,14 +6,22 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 13:05:16 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/03 13:06:52 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/03 14:49:18 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	check_argc(int argc)
+void	check_args(int argc, char *argv[])
 {
+	check_argc(argc, argv);
+	check_argv(argv);
+}
+void	check_argc(int argc, char *argv[])
+{
+	int	i;
+	int	j;
+	
 	if (argc < 5 || argc > 6)
 	{
 		printf("Sixtax Error: Wrong number of arguments\n");
@@ -21,6 +29,20 @@ void	check_argc(int argc)
 		printf("time_to_die\n\ttime_to_eat\n\ttime_to_sleep\n\t");
 		printf("[number_of_times_each_philosopher_must_eat]\n");
 		exit (1);
+	}
+
+	j = 0;
+	while (argv[++j])
+	{
+		i = -1;
+		while (argv[j][++i])
+		{
+			if (!ft_isdigit(argv[j][i]))
+			{
+				printf("Error: invalid value (%s)\n", argv[j]);
+				exit(2);
+			}
+		}
 	}
 }
 
@@ -45,6 +67,6 @@ void	check_argv(char *argv[])
 		|| num_meals < 0)
 	{
 		printf("Error: Invalid arguments\n");
-		exit (2);
+		exit (3);
 	}
 }

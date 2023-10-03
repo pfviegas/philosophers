@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 13:05:29 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/03 13:04:27 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/03 16:37:12 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ long int	get_time_ms(void)
  */
 int	died(t_Philosopher *philo)
 {
+	pthread_mutex_lock(&philo->sim->simulation_lock);
 	if ((get_time_ms() - philo->last_meal_time)
 		>= philo->sim->time_to_die)
 	{
-		pthread_mutex_lock(&philo->sim->simulation_lock);
 		if (philo->sim->simulation_running == 1)
 		{
 			print_msg(philo, "died");
@@ -60,46 +60,20 @@ int	died(t_Philosopher *philo)
 		return (1);
 	}
 	else
-		return (0);
-}
-
-int	will_die(t_Philosopher *philo)
-{
-	if ((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep)
-		>= philo->sim->time_to_die)
 	{
-		pthread_mutex_lock(&philo->sim->simulation_lock);
-		if (philo->sim->simulation_running == 1)
-		{
-			if ((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep)
-				>= philo->sim->time_to_die)
-			{
-				print_msg(philo, "is sleeping");
-				usleep((get_time_ms() - philo->last_meal_time + philo->sim->time_to_sleep - philo->sim->time_to_die) * 1000);
-				print_msg(philo, "died");
-			}
-		}
-		philo->sim->simulation_running = 0;
-		philo->state = DEAD;
 		pthread_mutex_unlock(&philo->sim->simulation_lock);
-		return (1);
-	}
-	else
 		return (0);
+	}
 }
 
-void	precise_sleep(long int miliseconds)
+void	action_philo(long int time, t_Philosopher *philo)
 {
 	long int	start_time;
 
 	start_time = get_time_ms();
-	if (miliseconds < 100)
-		usleep(miliseconds * 1000);
-	else
+	while ((get_time_ms() - start_time) < time)
 	{
-		while ((get_time_ms() - (start_time) < miliseconds))
-		{
-			usleep(10);
-		}
+		if (died(philo))
+			return ;
 	}
 }

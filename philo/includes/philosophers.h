@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/03 13:07:24 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/03 16:29:15 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,10 @@ typedef struct s_Philosopher
 	pthread_t				thread;
 }	t_Philosopher;
 
-void		check_argc(int argc);
+void	check_args(int argc, char *argv[]);
+void	check_argc(int argc, char *argv[]);
 
-void		check_argv(char *argv[]);
+void	check_argv(char *argv[]);
 
 // Função para converter char em int
 int		ft_atoi(const char *str);
@@ -91,9 +92,6 @@ void	eat_philo(t_Philosopher *philo);
 // Função para verificar se um filósofo deve morrer
 int			died(t_Philosopher *philo);
 
-// Função para verificar se um filósofo vai morrer durante o sono
-int	will_die(t_Philosopher *philo);
-
 // Função para imprimir mensagens
 void		print_msg(t_Philosopher *philo, char *message);
 
@@ -106,5 +104,6 @@ void		think_philo(t_Philosopher *philo);
 // Função para realizar a ação de dormir
 void		sleep_philo(t_Philosopher *philo);
 
-void	precise_sleep(long int miliseconds);
+void	action_philo(long int time, t_Philosopher *philo);
+
 #endif

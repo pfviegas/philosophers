@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/03 13:08:30 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/03 14:49:35 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	// Inicialização dos garfos
 	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
 	if (!sim->forks)
-		exit (3);
+		exit (4);
 	i = 0;
 	while(i < sim->num_philosophers)
 	{	
@@ -75,9 +75,7 @@ int	main(int argc, char *argv[])
 	t_Simulation	sim;
 	t_Philosopher	*philosophers;
 
-	check_argc(argc);
-	check_argv(argv);
-	// Inicia as variaveis da simulação
+	check_args(argc, argv);
 	init_var_sim(&sim, argc, argv);
 
 	// Criação dos filósofos
