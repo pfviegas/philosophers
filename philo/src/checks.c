@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 13:05:16 by pviegas           #+#    #+#             */
-/*   Updated: 2023/09/20 14:09:16 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/03 13:06:52 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-int	check_argc(int argc)
+void	check_argc(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
@@ -20,12 +20,11 @@ int	check_argc(int argc)
 		printf("Arguments:\n\t./philo\n\tnumber_of_philosophers\n\t");
 		printf("time_to_die\n\ttime_to_eat\n\ttime_to_sleep\n\t");
 		printf("[number_of_times_each_philosopher_must_eat]\n");
-		return (1);
+		exit (1);
 	}
-	return (0);
 }
 
-int	check_argv(char *argv[])
+void	check_argv(char *argv[])
 {
 	int	num_philos;
 	int	time_to_die;
@@ -46,7 +45,6 @@ int	check_argv(char *argv[])
 		|| num_meals < 0)
 	{
 		printf("Error: Invalid arguments\n");
-		return (1);
+		exit (2);
 	}
-	return (0);
 }

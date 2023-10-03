@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/25 15:41:59 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/03 13:08:30 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	pthread_mutex_init(&sim->print_lock, NULL);
 	// Inicialização dos garfos
 	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
+	if (!sim->forks)
+		exit (3);
 	i = 0;
 	while(i < sim->num_philosophers)
 	{	
@@ -73,15 +75,15 @@ int	main(int argc, char *argv[])
 	t_Simulation	sim;
 	t_Philosopher	*philosophers;
 
-	if (check_argc(argc) == 1)
-		return (1);
-	if (check_argv(argv) == 1)
-		return (1);
+	check_argc(argc);
+	check_argv(argv);
 	// Inicia as variaveis da simulação
 	init_var_sim(&sim, argc, argv);
 
 	// Criação dos filósofos
 	philosophers = malloc(sizeof(t_Philosopher) * (sim.num_philosophers));
+	if (!philosophers)
+		return (1);
 	create_philisophers(&sim, philosophers);
 
 	// Executa a simulação

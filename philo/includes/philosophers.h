@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/25 16:08:42 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/03 13:07:24 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_Simulation
 	t_Fork			*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	simulation_lock;
+	pthread_mutex_t	meals_lock;
 	int				num_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
@@ -55,16 +56,16 @@ typedef struct s_Simulation
 typedef struct s_Philosopher
 {
 	int						id;
-	int						meals_left;
 	enum e_PhilosopherState	state;
 	long					last_meal_time;
+	int						meals_left;
 	t_Simulation			*sim;
 	pthread_t				thread;
 }	t_Philosopher;
 
-int		check_argc(int argc);
+void		check_argc(int argc);
 
-int		check_argv(char *argv[]);
+void		check_argv(char *argv[]);
 
 // Função para converter char em int
 int		ft_atoi(const char *str);
