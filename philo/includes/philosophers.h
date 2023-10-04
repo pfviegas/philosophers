@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/03 16:29:15 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/04 13:00:11 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_Simulation
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	simulation_lock;
 	pthread_mutex_t	meals_lock;
+	pthread_mutex_t	died_lock;
 	int				num_philosophers;
 	int				time_to_die;
 	int				time_to_eat;

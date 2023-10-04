@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/03 14:49:35 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/04 13:04:52 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	
 	pthread_mutex_init(&sim->simulation_lock, NULL);
 	pthread_mutex_init(&sim->print_lock, NULL);
+	pthread_mutex_init(&sim->meals_lock, NULL);
+	pthread_mutex_init(&sim->died_lock, NULL);
 	// Inicialização dos garfos
 	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
 	if (!sim->forks)
@@ -56,6 +58,8 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 
 	pthread_mutex_destroy(&sim->simulation_lock);
 	pthread_mutex_destroy(&sim->print_lock);
+	pthread_mutex_destroy(&sim->meals_lock);
+	pthread_mutex_destroy(&sim->died_lock);
 	i = 0;
 	while(i < sim->num_philosophers)
 		pthread_mutex_destroy(&sim->forks[i++].lock);

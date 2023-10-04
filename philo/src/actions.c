@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:51:44 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/03 16:30:37 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/04 11:18:11 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,22 @@ void	eat_philo(t_Philosopher *philo)
 	right_fork = (philo->id) % philo->sim->num_philosophers;
 	if (philo->id % 2)
 	{
+		pthread_mutex_lock(&philo->sim->meals_lock);
 		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
 		if (!philo->sim->forks[left_fork].is_available)
 		{
-			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 			philo->state = THINKING;
+			pthread_mutex_unlock(&philo->sim->meals_lock);
+			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 			print_msg(philo, "is thinking");
 			return ;
 		}
 		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
 		if (!philo->sim->forks[right_fork].is_available) 
 		{
-			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 			philo->state = THINKING;
+			pthread_mutex_unlock(&philo->sim->meals_lock);
+			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 			print_msg(philo, "is thinking");
 			return ;
 		}
@@ -57,19 +60,22 @@ void	eat_philo(t_Philosopher *philo)
 	}
 	else
 	{
+		pthread_mutex_lock(&philo->sim->meals_lock);
 		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
 		if (!philo->sim->forks[right_fork].is_available) 
 		{
-			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 			philo->state = THINKING;
+			pthread_mutex_unlock(&philo->sim->meals_lock);
+			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 			print_msg(philo, "is thinking");
 			return ;
 		}
 		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
 		if (!philo->sim->forks[left_fork].is_available)
 		{
-			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 			philo->state = THINKING;
+			pthread_mutex_unlock(&philo->sim->meals_lock);
+			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 			print_msg(philo, "is thinking");
 			return ;
 		}
@@ -86,6 +92,7 @@ void	eat_philo(t_Philosopher *philo)
 	philo->meals_left--;
 	philo->sim->forks[left_fork].is_available = 1;
 	philo->sim->forks[right_fork].is_available = 1;
+	pthread_mutex_unlock(&philo->sim->meals_lock);
 	pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
 	pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
 }
@@ -103,7 +110,7 @@ void *philosopher_life(void *arg)
 		return ((void *)0);
 	}
 	if (!(philo->id % 2))
-		usleep(10);
+		usleep(50);
 	while (philo->meals_left != 0 && philo->sim->simulation_running == 1)
 	{
 		if (died(philo))
