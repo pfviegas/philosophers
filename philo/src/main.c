@@ -6,7 +6,7 @@
 /*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/04 13:04:52 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/04 14:28:26 by paulo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,6 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 		pthread_mutex_destroy(&sim->forks[i++].lock);
 }
 
-/**
- * @file main.c by 0x401403: main (main.c:84)
- * @brief Entry point of the program. 
- * Initializes the simulation variables, creates philosophers and runs the simulation.
- * 
- * @param argc Number of arguments passed to the program.
- * @param argv Array of	printf ("get_time_ms : %ld\n", get_time_ms());
- * @return 0 if the program runs successfully.
- */
 int	main(int argc, char *argv[])
 {
 	t_Simulation	sim;
