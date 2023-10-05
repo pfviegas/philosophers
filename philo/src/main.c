@@ -3,25 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/04 14:28:26 by paulo            ###   ########.fr       */
+/*   Created: 2023/10/05 12:32:31 by pviegas           #+#    #+#             */
+/*   Updated: 2023/10/05 13:58:09 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// atualizar cabeçalho
-
 #include "../includes/philosophers.h"
 
-/**
- * Runs the simulation with the given philosophers and settings.
- * Initializes forks and creates threads for each philosopher.
- * Waits for the threads to finish.
- *
- * @param sim The simulation settings.
- * @param philosopher The array of philosophers.
- */
 void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 {
 	int i;
@@ -29,7 +19,8 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	pthread_mutex_init(&sim->simulation_lock, NULL);
 	pthread_mutex_init(&sim->print_lock, NULL);
 	pthread_mutex_init(&sim->meals_lock, NULL);
-	pthread_mutex_init(&sim->died_lock, NULL);
+	pthread_mutex_init(&sim->time_lock, NULL);
+	pthread_mutex_init(&sim->start_time_lock, NULL);
 	// Inicialização dos garfos
 	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
 	if (!sim->forks)
@@ -42,7 +33,7 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 		i++;
 	}
 
-	sim->start_time = get_time_ms();
+	sim->start_time = get_time_ms(NULL);
 	// Criação das threads para os filósofos
 	i = 0;
 	while(i < sim->num_philosophers)
@@ -59,7 +50,8 @@ void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
 	pthread_mutex_destroy(&sim->simulation_lock);
 	pthread_mutex_destroy(&sim->print_lock);
 	pthread_mutex_destroy(&sim->meals_lock);
-	pthread_mutex_destroy(&sim->died_lock);
+	pthread_mutex_destroy(&sim->time_lock);
+	pthread_mutex_destroy(&sim->start_time_lock);
 	i = 0;
 	while(i < sim->num_philosophers)
 		pthread_mutex_destroy(&sim->forks[i++].lock);

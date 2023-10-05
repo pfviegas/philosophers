@@ -5,12 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/09/25 14:23:49 by pviegas          ###   ########.fr       */
+/*   Created: 2023/10/05 12:33:00 by pviegas           #+#    #+#             */
+/*   Updated: 2023/10/05 13:57:48 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// atualizar cabeçalho
 
 #include "../includes/philosophers.h"
 
@@ -93,7 +91,7 @@ void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher)
 		philosopher[i].id = i + 1;
 		philosopher[i].meals_left = simulation->total_meals;
 		philosopher[i].state = THINKING;
-		philosopher[i].last_meal_time = get_time_ms();
+		philosopher[i].last_meal_time = get_time_ms(NULL);
 		philosopher[i].sim = simulation;
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paulo <paulo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/04 15:30:47 by paulo            ###   ########.fr       */
+/*   Updated: 2023/10/05 14:52:07 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 // Enumeração para estados dos filósofos
 enum e_PhilosopherState {
 	THINKING,
+	WAITING,
 	EATING,
 	SLEEPING,
 	DEAD
@@ -42,15 +43,16 @@ typedef struct s_Simulation
 	long int		start_time;
 	t_Fork			*forks;
 	pthread_mutex_t	print_lock;
-	pthread_mutex_t	simulation_lock;
 	pthread_mutex_t	meals_lock;
-	pthread_mutex_t	died_lock;
+	pthread_mutex_t	time_lock;
 	int				num_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				total_meals;
 	int				simulation_running;
+	pthread_mutex_t	simulation_lock;
+	pthread_mutex_t	start_time_lock;
 }	t_Simulation;
 
 // Estrutura de dados para um filósofo
@@ -59,6 +61,7 @@ typedef struct s_Philosopher
 	int						id;
 	enum e_PhilosopherState	state;
 	long					last_meal_time;
+	long					start_time;
 	int						meals_left;
 	t_Simulation			*sim;
 	pthread_t				thread;
@@ -94,10 +97,11 @@ void	eat_philo(t_Philosopher *philo);
 int			died(t_Philosopher *philo);
 
 // Função para imprimir mensagens
-void		print_msg(t_Philosopher *philo, char *message);
+void		print_msg(t_Philosopher *philo, char *message, int sim_lock);
 
 // Função para calcular o tempo total decorrido
-long int	get_time_ms(void);
+// long int	get_time_ms(void);
+long int	get_time_ms(pthread_mutex_t *mutex);
 
 // Função para realizar a ação de pensar
 void		think_philo(t_Philosopher *philo);
