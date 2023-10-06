@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 12:33:00 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/05 13:57:48 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/06 16:14:38 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,43 +56,82 @@ int	ft_isdigit(int c)
 }
 
 /**
- * @brief Initializes the simulation variables with the values passed as arguments.
+ * @brief Initializes the simulation variables with the values 
+ * passed as arguments.
  * 
  * @param simulation Pointer to the Simulation struct to be initialized.
  * @param argc Number of arguments passed to the program.
- * @param argv Array of strings containing the arguments passed to the program.
+ * @param argv Array of strings containing the arguments.
  */
-void init_var_sim(t_Simulation *simulation, int argc, char *argv[]) 
+void	init_var_sim(t_Simulation *sim, int argc, char *argv[])
 {
-	simulation->num_philosophers = ft_atoi(argv[1]);
-	simulation->time_to_die = ft_atoi(argv[2]);
-	simulation->time_to_eat = ft_atoi(argv[3]);
-	simulation->time_to_sleep = ft_atoi(argv[4]);
+	sim->num_philosophers = ft_atoi(argv[1]);
+	sim->time_to_die = ft_atoi(argv[2]);
+	sim->time_to_eat = ft_atoi(argv[3]);
+	sim->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		simulation->total_meals = ft_atoi(argv[5]);
+		sim->total_meals = ft_atoi(argv[5]);
 	else
-		simulation->total_meals = -1;
-	simulation->simulation_running = 1;
+		sim->total_meals = -1;
+	sim->simulation_running = 1;
 }
 
 /**
- * @brief Initializes the philosophers in the simulation with their respective attributes.
+ * Initializes the mutexes and forks for the simulation.
  * 
- * @param simulation The simulation struct containing the number of philosophers and other parameters.
- * @param philosopher The philosopher struct containing the philosopher's id, meals_left, state, last_meal_time and sim.
+ * @param sim Pointer to the simulation struct.
+ * @return Returns 0 if successful, otherwise returns 1.
  */
-void create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher)
+int	init_mutexes(t_Simulation *sim)
 {
-	int i;
+	int	i;
+
+	if (pthread_mutex_init(&sim->simulation_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&sim->print_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&sim->meals_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&sim->time_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&sim->start_time_lock, NULL))
+		return (1);
+	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
+	if (!sim->forks)
+	{
+		printf("Error allocating memory for forks\n");
+		exit (5);
+	}
+	i = -1;
+	while (++i < sim->num_philosophers)
+	{
+		sim->forks[i].is_available = 1;
+		pthread_mutex_init(&sim->forks[i].lock, NULL);
+	}
+	return (0);
+}
+
+/**
+ * @brief Initializes the philosophers in the simulation 
+ * with their respective attributes.
+ * 
+ * @param sim The simulation struct containing the number 
+ * of philosophers and other parameters.
+ * @param philosopher The philosopher struct containing the philosopher's id, 
+ * meals_left, state, last_meal_time and sim.
+ */
+void	create_philos(t_Simulation *sim, t_Philosopher *philosopher)
+{
+	int	i;
 
 	i = 0;
-	while (i < simulation->num_philosophers)
+	while (i < sim->num_philosophers)
 	{
 		philosopher[i].id = i + 1;
-		philosopher[i].meals_left = simulation->total_meals;
+		philosopher[i].meals_left = sim->total_meals;
 		philosopher[i].state = THINKING;
-		philosopher[i].last_meal_time = get_time_ms(NULL);
-		philosopher[i].sim = simulation;
+		philosopher[i].last_meal_time = get_time_ms();
+		philosopher[i].sim = sim;
 		i++;
 	}
 }

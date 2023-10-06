@@ -6,57 +6,49 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 12:32:31 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/05 13:58:09 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/06 15:58:39 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void run_simulation(t_Simulation *sim, t_Philosopher *philosopher)
+/**
+ * Runs the simulation with the given simulation and philosopher parameters.
+ * Initializes mutexes and starts philosopher threads.
+ * Waits for philosopher threads to finish and destroys mutexes.
+ * @param sim The simulation parameters.
+ * @param philo The philosopher parameters.
+ */
+void	run_simulation(t_Simulation *sim, t_Philosopher *philo)
 {
-	int i;
-	
-	pthread_mutex_init(&sim->simulation_lock, NULL);
-	pthread_mutex_init(&sim->print_lock, NULL);
-	pthread_mutex_init(&sim->meals_lock, NULL);
-	pthread_mutex_init(&sim->time_lock, NULL);
-	pthread_mutex_init(&sim->start_time_lock, NULL);
-	// Inicialização dos garfos
-	sim->forks = malloc(sizeof(t_Fork) * (sim->num_philosophers));
-	if (!sim->forks)
-		exit (4);
-	i = 0;
-	while(i < sim->num_philosophers)
-	{	
-		sim->forks[i].is_available = 1;
-		pthread_mutex_init(&sim->forks[i].lock, NULL);
-		i++;
-	}
+	int	i;
 
-	sim->start_time = get_time_ms(NULL);
-	// Criação das threads para os filósofos
-	i = 0;
-	while(i < sim->num_philosophers)
+	if (init_mutexes(sim) == 1)
 	{
-		pthread_create(&philosopher[i].thread, NULL, philosopher_life, &philosopher[i]);
+		printf("Error initializing mutexes\n");
+		exit(4);
+	}
+	sim->start_time = get_time_ms();
+	i = 0;
+	while (i < sim->num_philosophers)
+	{
+		pthread_create(&philo[i].thread, NULL, philosopher_life, &philo[i]);
 		i++;
 	}
-
-	// Aguarda o fim das threads
 	i = 0;
-	while(i < sim->num_philosophers)
-		pthread_join(philosopher[i++].thread, NULL);
-
-	pthread_mutex_destroy(&sim->simulation_lock);
-	pthread_mutex_destroy(&sim->print_lock);
-	pthread_mutex_destroy(&sim->meals_lock);
-	pthread_mutex_destroy(&sim->time_lock);
-	pthread_mutex_destroy(&sim->start_time_lock);
-	i = 0;
-	while(i < sim->num_philosophers)
-		pthread_mutex_destroy(&sim->forks[i++].lock);
+	while (i < sim->num_philosophers)
+		pthread_join(philo[i++].thread, NULL);
+	destroy_mutexes(sim);
 }
 
+/**
+ * The main function of the program 
+ * that creates and runs the simulation of the dining philosophers problem.
+ * 
+ * @param argc The number of arguments passed to the program.
+ * @param argv An array of strings containing the arguments.
+ * @return Returns 0 if the program runs successfully, otherwise returns 1.
+ */
 int	main(int argc, char *argv[])
 {
 	t_Simulation	sim;
@@ -64,18 +56,15 @@ int	main(int argc, char *argv[])
 
 	check_args(argc, argv);
 	init_var_sim(&sim, argc, argv);
-
-	// Criação dos filósofos
 	philosophers = malloc(sizeof(t_Philosopher) * (sim.num_philosophers));
 	if (!philosophers)
+	{
+		printf("Error allocating memory for philosophers\n");
 		return (1);
-	create_philisophers(&sim, philosophers);
-
-	// Executa a simulação
+	}
+	create_philos(&sim, philosophers);
 	run_simulation(&sim, philosophers);
-
 	free(philosophers);
 	free(sim.forks);
-		
 	return (0);
 }

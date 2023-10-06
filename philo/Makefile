@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/10/05 15:02:01 by pviegas          ###   ########.fr        #
+#    Updated: 2023/10/06 17:31:42 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ SRC =	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/checks.c \
 		$(SRC_DIR)/init.c \
 		$(SRC_DIR)/actions.c \
-		$(SRC_DIR)/funcs.c
+		$(SRC_DIR)/funcs.c \
+		$(SRC_DIR)/forks.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 

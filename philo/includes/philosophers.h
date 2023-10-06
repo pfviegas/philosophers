@@ -5,12 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/13 12:20:16 by paulo             #+#    #+#             */
-/*   Updated: 2023/10/05 14:52:07 by pviegas          ###   ########.fr       */
+/*   Created: 2023/10/06 14:54:27 by pviegas           #+#    #+#             */
+/*   Updated: 2023/10/06 18:14:00 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// atualizar cabeçalho
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
@@ -69,46 +67,23 @@ typedef struct s_Philosopher
 
 void	check_args(int argc, char *argv[]);
 void	check_argc(int argc, char *argv[]);
-
 void	check_argv(char *argv[]);
-
-// Função para converter char em int
 int		ft_atoi(const char *str);
-
-// Função para verificar se um caractere é um dígito decimal.
 int		ft_isdigit(int c);
-
-// Função para inicializar as variaveis da simulação
-void	init_var_sim(t_Simulation *simulation, int argc, char *argv[]);
-
-// Função para inicializar os filósofos
-void	create_philisophers(t_Simulation *simulation, t_Philosopher *philosopher);
-
-// Função para criar e iniciar a simulação
+void	init_var_sim(t_Simulation *sim, int argc, char *argv[]);
+int		init_mutexes(t_Simulation *sim);
+void	create_philos(t_Simulation *sim, t_Philosopher *philosopher);
 void	run_simulation(t_Simulation *sim, t_Philosopher *philosophers);
-
-// Função que define o ciclo de vida de um filósofo
 void	*philosopher_life(void *arg);
-
-// Função para realizar a ação de comer
 void	eat_philo(t_Philosopher *philo);
-
-// Função para verificar se um filósofo deve morrer
-int			died(t_Philosopher *philo);
-
-// Função para imprimir mensagens
-void		print_msg(t_Philosopher *philo, char *message, int sim_lock);
-
-// Função para calcular o tempo total decorrido
-// long int	get_time_ms(void);
-long int	get_time_ms(pthread_mutex_t *mutex);
-
-// Função para realizar a ação de pensar
-void		think_philo(t_Philosopher *philo);
-
-// Função para realizar a ação de dormir
-void		sleep_philo(t_Philosopher *philo);
-
+int		died(t_Philosopher *philo);
+void	print_msg(t_Philosopher *philo, char *message, int sim_lock);
+long	get_time_ms(void);
+void	think_philo(t_Philosopher *philo);
+void	sleep_philo(t_Philosopher *philo);
 void	action_philo(long int time, t_Philosopher *philo);
-
+void	destroy_mutexes(t_Simulation *sim);
+int		one_philo(t_Philosopher *philo);
+void	grab_left_fork(t_Philosopher *philo, int left_fork, int right_fork);
+void	grab_right_fork(t_Philosopher *philo, int left_fork, int right_fork);
 #endif
