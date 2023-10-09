@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:54:27 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/06 18:14:00 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/09 11:16:09 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	sleep_philo(t_Philosopher *philo);
 void	action_philo(long int time, t_Philosopher *philo);
 void	destroy_mutexes(t_Simulation *sim);
 int		one_philo(t_Philosopher *philo);
-void	grab_left_fork(t_Philosopher *philo, int left_fork, int right_fork);
-void	grab_right_fork(t_Philosopher *philo, int left_fork, int right_fork);
+int		grab_forks(t_Philosopher *philo, int left_fork, int right_fork);
+int		grab_left_fork(t_Philosopher *philo, int left_fork, int right_fork);
+int		grab_right_fork(t_Philosopher *philo, int left_fork, int right_fork);
+void	drop_forks(t_Philosopher *philo, int left_fork, int right_fork);
 #endif

@@ -6,17 +6,27 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 12:33:38 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/06 17:37:30 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/09 11:32:37 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
+/**
+ * Changes the state of the philosopher to thinking.
+ * 
+ * @param philo The philosopher to change the state of.
+ */
 void	think_philo(t_Philosopher *philo)
 {
 	philo->state = THINKING;
 }
 
+/**
+ * Sleeps the philosopher for a certain amount of time.
+ * 
+ * @param philo The philosopher to put to sleep.
+ */
 void	sleep_philo(t_Philosopher *philo)
 {
 	philo->state = SLEEPING;
@@ -25,6 +35,16 @@ void	sleep_philo(t_Philosopher *philo)
 	usleep(100);
 }
 
+/**
+ * This function represents the action of a philosopher eating.
+ * Takes a pointer to a Philosopher struct as argument.
+ * Calculates the index of the left and right forks of the philosopher.
+ * Grabs the forks and locks the meals mutex.
+ * Updates the last meal time, state and meals left of the philosopher.
+ * Unlocks the meals mutex and prints a message that the philosopher is eating.
+ * Calls action_philo to simulate the time the philosopher spends eating.
+ * It drops the forks.
+ */
 void	eat_philo(t_Philosopher *philo)
 {
 	int	left_fork;
@@ -32,60 +52,8 @@ void	eat_philo(t_Philosopher *philo)
 
 	left_fork = philo->id - 1;
 	right_fork = (philo->id) % philo->sim->num_philosophers;
-	if (philo->id % 2)
-	{
-//		grab_left_fork(philo, left_fork, right_fork);
-		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
-		if (!philo->sim->forks[left_fork].is_available)
-		{
-			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
-			if (philo->state != WAITING)
-				print_msg(philo, "is thinking", 1);
-			philo->state = WAITING;
-			return ;
-		}
-		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
-		if (!philo->sim->forks[right_fork].is_available) 
-		{
-			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
-			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
-			if (philo->state != WAITING)
-				print_msg(philo, "is thinking", 1);
-			philo->state = WAITING;
-			return ;
-		}
-		print_msg(philo, "has taken a fork", 1);
-		print_msg(philo, "has taken a fork", 1);
-	}
-	else
-	{
-//		grab_right_fork(philo, left_fork, right_fork);
-		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
-		if (!philo->sim->forks[right_fork].is_available) 
-		{
-			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
-			if (philo->state != WAITING)
-				print_msg(philo, "is thinking", 1);
-			philo->state = WAITING;
-			return ;
-		}
-		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
-		if (!philo->sim->forks[left_fork].is_available)
-		{
-			pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
-			pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
-			if (philo->state != WAITING)
-				print_msg(philo, "is thinking", 1);
-			philo->state = WAITING;
-			return ;
-		}
-		print_msg(philo, "has taken a fork", 1);
-		print_msg(philo, "has taken a fork", 1);
-	}
-	philo->sim->forks[left_fork].is_available = 0;
-	philo->sim->forks[right_fork].is_available = 0;
-	pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
-	pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
+	if (grab_forks(philo, left_fork, right_fork) == 1)
+		return ;
 	pthread_mutex_lock(&philo->sim->meals_lock);
 	philo->last_meal_time = get_time_ms();
 	philo->state = EATING;
@@ -93,22 +61,17 @@ void	eat_philo(t_Philosopher *philo)
 	pthread_mutex_unlock(&philo->sim->meals_lock);
 	print_msg(philo, "is eating", 1);
 	action_philo(philo->sim->time_to_eat, philo);
-	if (philo->id % 2)
-	{
-		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
-		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->sim->forks[right_fork].lock);
-		pthread_mutex_lock(&philo->sim->forks[left_fork].lock);
-	}
-	philo->sim->forks[left_fork].is_available = 1;
-	philo->sim->forks[right_fork].is_available = 1;
-	pthread_mutex_unlock(&philo->sim->forks[left_fork].lock);
-	pthread_mutex_unlock(&philo->sim->forks[right_fork].lock);
+	drop_forks(philo, left_fork, right_fork);
 }
 
+/**
+ * The philosopher_life function is the main function 
+ * that controls the life cycle of a philosopher.
+ * 
+ * @param arg A pointer to a t_Philosopher struct that 
+ * contains information about the philosopher.
+ * @return void* Returns a null pointer when the function is finished.
+ */
 void	*philosopher_life(void *arg)
 {
 	t_Philosopher	*philo;
