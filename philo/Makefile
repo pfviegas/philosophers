@@ -5,12 +5,11 @@
 #                                                     +:+ +:+         +:+      #
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/09/13 15:43:01 by paulo             #+#    #+#              #
-#    Updated: 2023/10/09 11:18:36 by pviegas          ###   ########.fr        #
+#    Created: 2023/10/09 12:15:12 by pviegas           #+#    #+#              #
+#    Updated: 2023/10/09 12:16:01 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# atualizar cabeçalho
 NAME = philo
 SRC_DIR = src
 OBJ_DIR = objs

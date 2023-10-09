@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 13:05:16 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/06 17:12:09 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/10/09 12:19:16 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,5 @@ int	one_philo(t_Philosopher *philo)
 		print_msg(philo, "died", 1);
 		return (1);
 	}
-	if (!(philo->id % 2))
-		usleep(100);
 	return (0);
 }
